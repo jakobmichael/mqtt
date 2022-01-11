@@ -8,11 +8,11 @@ INFLUXDB_USER = 'admin'
 INFLUXDB_PASSWORD = 'admin'
 INFLUXDB_DATABASE = 'dht22'
 
-MQTT_ADDRESS = '172.30.131.70'
-MQTT_USER = 'cdavid'
-MQTT_PASSWORD = 'cdavid'
+MQTT_ADDRESS = '172.31.180.226'
+#MQTT_USER = 'cdavid'
+#MQTT_PASSWORD = 'cdavid'
 MQTT_TOPIC = 'house/dht22'
-MQTT_CLIENT_ID = 'MQTTInfluxDBBridge'
+MQTT_CLIENT_ID = 'Client_1'
 
 influxdb_client = InfluxDBClient(INFLUXDB_ADDRESS, 8086, INFLUXDB_USER, INFLUXDB_PASSWORD, None)
 
@@ -56,7 +56,7 @@ def main():
     _init_influxdb_database()
 
     mqtt_client = mqtt.Client(MQTT_CLIENT_ID)
-    mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
+    #mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
 
