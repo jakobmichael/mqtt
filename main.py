@@ -3,15 +3,15 @@
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
 
-INFLUXDB_ADDRESS = 'localhost'
+INFLUXDB_ADDRESS = '172.31.184.140'
 INFLUXDB_USER = 'admin'
 INFLUXDB_PASSWORD = 'admin'
-INFLUXDB_DATABASE = 'dht22'
+INFLUXDB_DATABASE = 'weather_stations'
 
-MQTT_ADDRESS = '172.31.180.226'
+MQTT_ADDRESS = '172.31.238.115'
 #MQTT_USER = 'cdavid'
 #MQTT_PASSWORD = 'cdavid'
-MQTT_TOPIC = 'house/dht22'
+MQTT_TOPIC = 'house/dht22/#'
 MQTT_CLIENT_ID = 'Client_1'
 
 influxdb_client = InfluxDBClient(INFLUXDB_ADDRESS, 8086, INFLUXDB_USER, INFLUXDB_PASSWORD, None)
@@ -25,15 +25,15 @@ def on_connect(client, userdata, flags, rc):
 
 
 
-def _send_sensor_data_to_influxdb(sensor_data):
+def _send_sensor_data_to_influxdb(topic, data):
     json_body = [
         {
-            'measurement': sensor_data.measurement,
+            'measurement': data,
             'tags': {
-                'location': sensor_data.location
+                'location': topic,
             },
             'fields': {
-                'value': sensor_data.value
+                'value': data
             }
         }
     ]
@@ -41,8 +41,9 @@ def _send_sensor_data_to_influxdb(sensor_data):
 
 def on_message(client, userdata, msg):
     """The callback for when a PUBLISH message is received from the server."""
-    print(msg.topic + ' ' + str(msg.payload))
-    #sensor_data = _parse_mqtt_message(msg.topic, msg.payload.decode('utf-8'))
+    message_as_string = msg.payload.decode('utf-8')
+    print(float(message_as_string))
+    _send_sensor_data_to_influxdb(msg.topic,float(message_as_string))
     #if sensor_data is not None:
         #_send_sensor_data_to_influxdb(sensor_data)
 
