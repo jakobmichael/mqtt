@@ -4,36 +4,44 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.util.Scanner;
+
 public class MqttPublisher {
 
     public static void main(String[] args) {
 
-        //Topic name
         String topic = "test";
-        //data to be send
-        String content = "Temp:20,Humi:70";
-        int qos = 0;
-        /*hostname is localhost as mqtt publisher and broker are
-          running on the same computer*/
-        String broker = "tcp://192.168.1.162";
+        String content = "";
+        int qos = 2;
+        String broker = "tcp://localhost:1885";
         String clientId = "mqtt_test";
+        String nextPublish = "yes";
         MemoryPersistence persistence = new MemoryPersistence();
 
         try {
-            MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
+            Scanner scanner = new Scanner(System.in);
+            MqttClient mqttClient = new MqttClient(broker, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
             System.out.println("Connecting to broker: " + broker);
-            sampleClient.connect(connOpts);
+            mqttClient.connect(connOpts);
             System.out.println("Connected to broker");
-            System.out.println("Publishing message:" + content);
-            MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(qos);
-            sampleClient.publish(topic, message);
-            System.out.println("Message published");
-            //sampleClient.disconnect();
-            //sampleClient.close();
-            //System.exit(0);
+
+            while(nextPublish.equals("yes")) {
+                System.out.println("Specify MQTT Message: ");
+                content = scanner.next();
+                System.out.println("Publishing message:" + content);
+                MqttMessage message = new MqttMessage(content.getBytes());
+                message.setQos(qos);
+                mqttClient.publish(topic, message);
+                System.out.println("Message published");
+                System.out.println("Publish another Message? (yes/no)");
+                nextPublish = scanner.next();
+            }
+
+            mqttClient.disconnect();
+            mqttClient.close();
+            System.exit(0);
         } catch (MqttException me) {
             System.out.println("reason " + me.getReasonCode());
             System.out.println("msg " + me.getMessage());
