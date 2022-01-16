@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.Scanner;
 
 public class MqttMain {
@@ -22,7 +21,6 @@ public class MqttMain {
             System.out.println(input);
             String[] params = input.split(",");
             pub.publishMessage(params[0], params[1], Integer.valueOf(params[2]));
-            Toolkit.getDefaultToolkit().beep();
             System.out.println("Continue publishing? yes/no");
             continuePublish = scanner.nextLine();
 
