@@ -16,7 +16,6 @@ public class MqttPublisher {
         this.brokerIp = brokerIp;
         this.clientId = clientId;
         this.persistence = new MemoryPersistence();
-
     }
 
     public void generateMqttClient() {
