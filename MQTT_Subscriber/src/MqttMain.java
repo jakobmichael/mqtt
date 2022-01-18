@@ -13,7 +13,9 @@ public class MqttMain {
             System.out.println("Specify brokerIp:port");
             broker = scanner.next();
         }
-        MqttSubscriber subscriber = new MqttSubscriber(broker,"client_2","test");
+        System.out.println("Specify opic to subscribe:");
+        String topic = scanner.next();
+        MqttSubscriber subscriber = new MqttSubscriber(broker,"client_2",topic);
         subscriber.generateMqttClient();
         subscriber.connectClientToBroker();
         subscriber.subscribe();
